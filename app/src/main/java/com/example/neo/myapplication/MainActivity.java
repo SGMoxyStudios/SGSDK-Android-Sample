@@ -6,24 +6,27 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.util.Log;
 import android.webkit.ValueCallback;
+import android.webkit.CookieManager;
 import com.android.volley.*;
 import com.android.volley.toolbox.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    //String Host = "http://gameapi.smartgamesltd.com/";
-    //String URL_Init = "init";
-    //String GameKey = "d7e73390-d7fd-11e6-9074-21c247f06802";
-    //String AppSecret = "d7d7c810-d7ee-11e6-9e86-db4f79aeee86";
-    //String PrivateKey = "azlxEUasGMOf1VoygA9Jvta76pG8QnoC";
-    String Host = "http://192.168.201.155:12000/";
+    String Host = "http://gameapi.smartgamesltd.com/";
     String URL_Init = "init";
-    String GameKey = "0e0c3020-dd2f-11e6-ae80-6ffc5013c85a";
-    String AppSecret = "f84b3010-dd2e-11e6-ae80-6ffc5013c85a";
-    String PrivateKey = "KjUQMi2FCMeddTeDqc5gkUYbn97xAuKQ";
+    String GameKey = "d7e73390-d7fd-11e6-9074-21c247f06802";
+    String AppSecret = "d7d7c810-d7ee-11e6-9e86-db4f79aeee86";
+    String PrivateKey = "azlxEUasGMOf1VoygA9Jvta76pG8QnoC";
+//    String Host = "http://192.168.201.229:12000/";
+//    String URL_Init = "init";
+//    String GameKey = "0e0c3020-dd2f-11e6-ae80-6ffc5013c85a";
+//    String AppSecret = "f84b3010-dd2e-11e6-ae80-6ffc5013c85a";
+//    String PrivateKey = "KjUQMi2FCMeddTeDqc5gkUYbn97xAuKQ";
     WebView mWebView = null;
     Map<String, String> webViewCookie = new HashMap<String, String>();
+    String cookie;
+    CookieManager cookieManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         mWebView.getSettings().setUseWideViewPort(true);
         mWebView.getSettings().setJavaScriptEnabled(true);
 
+        cookieManager = CookieManager.getInstance();
         Init(GameKey, AppSecret, PrivateKey);
     }
 
@@ -47,53 +51,40 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             Log.d("URL", url);
-            Kind = 0;
-            String js = "ResultCode()";
-
-            if (url.contains("init")) {
-                Kind = 1;
-
-            } else
-            if (url.contains("login"))
-                Kind = 2;
-            else
-            if (url.contains("openid")) {
-                Kind = 3;
-                js = "GetOpenID()";
-            }
-
-            view.evaluateJavascript(js, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                    Log.d("value", value);
-
-                    switch (Kind) {
-                        case 1:
-                            if (!IsInit && value.equals("1")) {
-                                IsInit = true;
-                                Login();
-                            }
-
-                            break;
-                        case 2:
-                            if (value.equals("1"))
-                                GetOpenID();
-
-                            break;
-                        case 3:
-                            Log.d("Open ID is ", value);
-
-                            break;
+            if (url.contains("login")) {
+                view.evaluateJavascript("ResultCode()", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.d("Login code is ", value);
                     }
-                }
-            });
+                });
+
+                view.evaluateJavascript("GetOpenID()", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.d("Login openid is ", value);
+                    }
+                });
+
+                view.evaluateJavascript("GetToken()", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.d("Login token is ", value);
+                    }
+                });
+
+                view.evaluateJavascript("GetSessionID()", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.d("Login session id is ", value);
+                    }
+                });
+            }
         }
     };
 
     //1.
     public void Init(String gamekey, String appsecret, String privatekey) {
-        //mWebView.loadUrl(String.format("%s?gamekey=%s&appsecret=%s&privatekey=%s", Host + URL_Init, gamekey, appsecret, privatekey));
-
         String url = String.format("%s?gamekey=%s&appsecret=%s&privatekey=%s&channel=googleplay", Host + URL_Init, gamekey, appsecret, privatekey);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -113,8 +104,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
                 if (response.headers.containsKey("Set-Cookie")) {
-                    webViewCookie.clear();
-                    webViewCookie.put("cookie", response.headers.get("Set-Cookie"));
+                    cookie = response.headers.get("Set-Cookie");
                 }
 
                 return super.parseNetworkResponse(response);
@@ -122,16 +112,11 @@ public class MainActivity extends AppCompatActivity {
         };
 
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
-
     }
 
     //2.
     public void Login() {
-        mWebView.loadUrl(Host + "login", webViewCookie);
-    }
-
-    //3.
-    public void GetOpenID() {
-        mWebView.loadUrl(Host + "openid", webViewCookie);
+        cookieManager.setCookie(Host + "login", cookie);
+        mWebView.loadUrl(Host + "login");
     }
 }

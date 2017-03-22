@@ -19,6 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <meta-data android:name="SDKChannel" android:value="googleplay" />
+        <meta-data android:name="Base64PublicKey" android:value="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArakVBjhwXhUL+ALPqz93i8KjUtBTfphDLcsVGYKtImkc5bkxO2EI9ldt5XouwHChL0vbUqAk2IpM9CO35gbnDfjdCpIjrYvWWqI3rvaH9AidoL5enEsbwiuVss9PpIGgk4VOlCInT+zi/uUATiRxveil34NZr/sHVFCqJwRmQLy8DFTY4xxgIvD+uGcYGawVDmuO1AuK7Af3PjL2CNi7Qa7UTr8CTFQGX/5aXNzbUzbJjB4Iznvmifwm05mZ1f7IzbHsG7QCV8li9WIxBl6O3B09e2HXruo5wHJANELGL3vn6wiWxwUK4D2PbvmWQy2fP604kNMSs60WndkoERn/gwIDAQAB" />
+
     </application>
 
 </manifest>

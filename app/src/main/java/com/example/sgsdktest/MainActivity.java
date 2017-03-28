@@ -3,12 +3,16 @@ package com.example.sgsdktest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sgstudios.rd.*;
+import android.content.Intent;
+import android.widget.ScrollView;
+
+import com.sgstudios.rd.SgSDK;
+import com.sgstudios.rd.SgSDKListener;
+import com.sgstudios.rd.SgSDKPayRequest;
+import com.sgstudios.rd.SgSDKPayResponse;
+import com.sgstudios.rd.SgSDKResult;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -17,6 +21,7 @@ public class MainActivity extends AppCompatActivity
     private final String AppSecret = "d7d7c810-d7ee-11e6-9e86-db4f79aeee86";
 
     private TextView _txtLog;
+    private ScrollView _scroller;
     private boolean isWidgetShown=false;
 
     @Override
@@ -26,27 +31,35 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         _txtLog = (TextView) findViewById(R.id.txtLog);
+        _scroller = (ScrollView) findViewById(R.id.scroller);
 
         setSDKCallback();
-        SgSDK.getInstance().init(MainActivity.this,GameKey,AppSecret);
+        
+        findViewById(R.id.btnInit).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                SgSDK.getInstance().init(MainActivity.this,GameKey,AppSecret);
+            }
+        });
 
         findViewById(R.id.btnAPICall).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                UILog("Init SDK...");
-                SgSDK.getInstance().init(MainActivity.this,GameKey,AppSecret);
+                UILog("Restore Purchase...");
+                SgSDK.getInstance().restorePurchasedItems();
             }
         });
 
-        findViewById(R.id.btnLogin).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.btnSubscribe).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                UILog("Launch Login WebView...");
-                SgSDK.getInstance().login();
+                SgSDK.getInstance().pay(initPayReq("com.sgstudions.subscribetest1","subscribe"));
             }
         });
 
@@ -55,26 +68,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                //UILog("SDK buy...");
-                //SgSDK.getInstance().pay("com.sgstudios.paytest1");
-
-                SgSDKPayRequest req = new SgSDKPayRequest();
-                req.setProductId("com.sgstudios.paytest1");
-                req.setProductName("My Product");
-                req.setPaymentMethod("managed");
-                req.setPaymentChannel("WeChat");
-                req.setProductDesc("Product Description......");
-                req.setPrice(1.25f);
-                req.setServerId("My ServerId");
-                req.setServerName("My Server Name");
-                req.setRoleId("My Role Id");
-                req.setRoleName("My Role Name");
-                req.setRoleLevel(1);
-                req.setPayNotifyUrl("PAY_NOTIFY_URL");
-
-                SgSDK.getInstance().pay(req);
+                SgSDK.getInstance().pay(initPayReq("com.sgstudios.paytest1","managed"));
             }
         });
+
 
         findViewById(R.id.btnWidget).setOnClickListener(new View.OnClickListener()
         {
@@ -91,6 +88,15 @@ public class MainActivity extends AppCompatActivity
                     SgSDK.getInstance().showWidget("ML");
                     isWidgetShown = true;
                 }
+            }
+        });
+
+        findViewById(R.id.btnLogin).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                SgSDK.getInstance().login();
             }
         });
 
@@ -144,31 +150,94 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-    }
-
-    private void animateView(final ImageView imgView, final float finalX, final float finalY)
-    {
-        TranslateAnimation animation = new TranslateAnimation(0, finalX-imgView.getX(), 0, finalY-imgView.getY());
-        animation.setDuration(500);  // animation duration
-        animation.setFillAfter(true);
-        animation.setAnimationListener(new Animation.AnimationListener()
+        findViewById(R.id.btnVerifySession).setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onAnimationStart(Animation animation){}
-
-            @Override
-            public void onAnimationEnd(Animation animation)
+            public void onClick(View view)
             {
-                imgView.setX(finalX);
-                imgView.setY(finalY);
-                imgView.clearAnimation();
+                SgSDK.getInstance().verifySession(GameKey, SgSDK.getInstance().getSessionId(), SgSDK.getInstance().getOpenId(), "signature");
             }
-
-            @Override
-            public void onAnimationRepeat(Animation animation){}
         });
 
-        imgView.startAnimation(animation);
+        findViewById(R.id.btnVerifyToken).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                SgSDK.getInstance().verifyToken(SgSDK.getInstance().getToken());
+            }
+        });
+
+        findViewById(R.id.btnOpenId).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                SgSDK.getInstance().openId();
+            }
+        });
+
+        findViewById(R.id.btnGameStart).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                SgSDK.getInstance().gameStart();
+            }
+        });
+
+        findViewById(R.id.btnGameStop).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                SgSDK.getInstance().gameStop();
+            }
+        });
+
+        findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                SgSDK.getInstance().logout();
+            }
+        });
+
+        findViewById(R.id.btnClr).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                clearUILog();
+            }
+        });
+    }
+
+    private SgSDKPayRequest initPayReq(String pid, String type)
+    {
+        SgSDKPayRequest req = new SgSDKPayRequest();
+        req.setProductId(pid);
+        req.setProductName("My Product");
+        req.setPaymentMethod(type); //"managed" or "subscribe"
+        req.setPaymentChannel("GooglePay"); //GooglePay, WeChat,.........
+        req.setProductDesc("Product Description......");
+        req.setPrice(1.25f);
+        req.setServerId("My ServerId");
+        req.setServerName("My Server Name");
+        req.setRoleId("My Role Id");
+        req.setRoleName("My Role Name");
+        req.setRoleLevel(1);
+        req.setPayNotifyUrl("PAY_NOTIFY_URL");
+        return req;
+    }
+
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        SgSDK.getInstance().onResume();
     }
 
     @Override
@@ -184,6 +253,21 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        SgSDK.getInstance().onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        SgSDK.getInstance().onDestroy();
+        super.onDestroy();
+    }
+
+    //--------------------------------------------------------------------------------------
     private void setSDKCallback()
     {
         UILog("Prepare SDK Listener...");
@@ -194,13 +278,12 @@ public class MainActivity extends AppCompatActivity
             public void onCallBack(SgSDKResult result)
             {
                 UILog(result.toString());
+                if(result.getData()!=null) UILog("[Result Obj]: " + result.getData().toString());
 
                 switch (result.getCode())
                 {
                     case 101: // init OK
-                        break;
-
-                    case 102: // init Fail
+                        UILog("ChannelId: "+SgSDK.getInstance().getChannelId());
                         break;
 
                     case 201: // login OK
@@ -210,27 +293,48 @@ public class MainActivity extends AppCompatActivity
                         UILog("IsLogin: "+SgSDK.getInstance().isLogin());
                         break;
 
-                    case 202: // login Fail
-                    case 203: // login Fail
-                    case 204: // login Fail
-                    case 205: // login Fail
+                    case 251: // openId result
                         break;
-
                     case 1101: // pay OK
+                    case 1102: // pay fail
+                    case 1103: // pay fail
+                    case 1104: // pay fail
+                    case 1105: // pay fail
+                    case 1106: // pay fail
+                    case 1107: // pay fail
+                    case 1108: // pay fail
                         SgSDKPayResponse resp = (SgSDKPayResponse)result.getData();
-                        UILog(resp.getRawJson());
+                        if(resp!=null)
+                        {
+                            UILog(resp.getRawJson());
+                        }
                         break;
 
+                    case 1151: // google pay init fail
+                    case 1161: // google subscribe ok
+                    case 1162: // google subscribe ok
+                    case 1171: // google pay ok
+                    case 1172: // google pay fail
+                    case 1182: // google consume fail
 
-                    //..............................
+                    case 9997: //SDK GetMetaData Error
+                    case 9998: //SDK JSONException
                 }
             }
         });
+
+
     }
 
     private void UILog(String msg)
     {
         _txtLog.append(msg+"\n");
+
     }
+    private void clearUILog()
+    {
+        _txtLog.setText("");
+    }
+
 
 }

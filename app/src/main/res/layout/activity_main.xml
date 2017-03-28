@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/holo_orange_light"
-    tools:context="com.smartgamesltd.androidsdk2.MainActivity">
+    tools:context="com.sgstudios.test.MainActivity">
 
 
     <LinearLayout
@@ -26,32 +26,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <Button
-                android:id="@+id/btnAPICall"
-                android:layout_width="67dp"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:elevation="0dp"
-                android:text="Init"
-                android:textColor="@android:color/background_light"/>
+            android:orientation="horizontal">
 
 
             <Button
                 android:id="@+id/btnBuy"
                 android:layout_width="53dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="0.05"
                 android:background="@android:color/holo_red_dark"
                 android:text="Buy"
                 android:textColor="@android:color/background_light"/>
 
             <Button
-                android:id="@+id/btnWidget"
+                android:id="@+id/btnSubscribe"
+                android:layout_width="51dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@color/colorAccent"
+                android:text="Sub"
+                android:textColor="@android:color/background_light"/>
+
+            <Button
+                android:id="@+id/btnAPICall"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_marginLeft="5dp"
+                android:text="Restore"
+                android:textColor="@android:color/background_light"
+                />
+
+            <Button
+                android:id="@+id/btnWidget"
+                android:layout_width="72dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:background="@android:color/holo_green_dark"
@@ -59,13 +66,12 @@
                 android:textColor="@android:color/background_light"/>
 
             <Button
-                android:id="@+id/btnLogin"
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/btnClr"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:background="@android:color/darker_gray"
-                android:text="Login"
-                android:textColor="@android:color/background_light"/>
+                android:text="X"/>
 
         </LinearLayout>
 
@@ -73,28 +79,68 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnInit"
+                android:layout_width="68dp"
+                android:layout_height="match_parent"
+                android:text="Init"/>
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="68dp"
+                android:layout_height="match_parent"
+                android:text="Login"/>
 
             <Button
                 android:id="@+id/btnSignup"
-                android:layout_width="82dp"
-                android:layout_height="wrap_content"
+                android:layout_width="76dp"
+                android:layout_height="match_parent"
                 android:text="Signup"/>
 
             <Button
                 android:id="@+id/btnForgetPass"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="74dp"
+                android:layout_height="match_parent"
                 android:text="Forget Pass"
-                />
+                android:layout_weight="0.51"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnChangePass"
-                android:layout_width="57dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.87"
-                android:text="Change Pass"/>
+                android:layout_width="93dp"
+                android:layout_height="match_parent"
+                android:text="Chg Pass"/>
+
+            <Button
+                android:id="@+id/btnMyAccount"
+                android:layout_width="79dp"
+                android:layout_height="match_parent"
+                android:text="My Act"
+                />
+
+            <Button
+                android:id="@+id/btnParentalLock"
+                android:layout_width="93dp"
+                android:layout_height="match_parent"
+                android:text="Parental Lock"
+                android:layout_weight="0.03"/>
+
+            <Button
+                android:id="@+id/btnChildData"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:text="Kid"/>
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -104,29 +150,54 @@
             android:weightSum="1">
 
             <Button
-                android:id="@+id/btnMyAccount"
-                android:layout_width="96dp"
-                android:layout_height="wrap_content"
-                android:text="My Account"
-                android:layout_weight="0.11"/>
+                android:id="@+id/btnVerifyToken"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Vrfy Token"/>
 
             <Button
-                android:id="@+id/btnParentalLock"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:text="Parental Lock"/>
+                android:id="@+id/btnVerifySession"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Vrfy Session"/>
 
             <Button
-                android:id="@+id/btnChildData"
-                android:layout_width="68dp"
-                android:layout_height="wrap_content"
-                android:text="Child Data"
-                android:layout_weight="0.25"/>
+                android:id="@+id/btnOpenId"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="OpenId"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnGameStart"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Gm Start"/>
+
+            <Button
+                android:id="@+id/btnGameStop"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Gm Stop"/>
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Logout"
+                />
 
 
         </LinearLayout>
 
         <ScrollView
+            android:id="@+id/scroller"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignEnd="@+id/textView2"

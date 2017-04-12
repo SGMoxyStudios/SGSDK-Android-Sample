@@ -287,13 +287,6 @@ public class MainActivity extends AppCompatActivity
 
     private SgSDKPayRequest initWeChatOrder(String orderID, String pName, float price)
     {
-        try {
-            pName = new String(pName.getBytes("UTF-8"), "ISO8859-1");
-        } catch (Exception e) {
-            pName = "";
-            Log.e("PAY_GET", "异常："+e.getMessage());
-        }
-
         SgSDKPayRequest req = new SgSDKPayRequest();
         req.orderId = orderID;
         req.productName = pName;
@@ -305,7 +298,7 @@ public class MainActivity extends AppCompatActivity
         req.productDesc = "Product Description......";
         req.spbill_create_ip = "14.23.150.211";
         req.notify_url = "http://gameapi.smartgamesltd.com/wechat-pay";
-        req.u8NotifyUrl = "http://www.sgstudios.cn/pay/sg/payCallback";
+        req.u8NotifyUrl = "http://www.sgstudios.cn:8080/pay/sg/payCallback/1706";
         String random_str = UUID.randomUUID().toString().replace("-", "");
         req.nonce_str = random_str.substring(0,10); //random number
 

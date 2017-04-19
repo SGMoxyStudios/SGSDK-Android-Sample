@@ -1,17 +1,14 @@
 package com.example.sgsdktest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import android.content.Intent;
-import android.widget.ScrollView;
-
 import com.sgstudios.sdk.*;
 
 import java.util.UUID;
@@ -27,7 +24,7 @@ public class MainActivity extends AppCompatActivity
     private String _cmd;
     private boolean isWidgetShown=false;
 
-    private SgSDK _sdk = SgSDK.getInstance();
+    private SGSDK _sdk = SGSDK.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,14 +35,14 @@ public class MainActivity extends AppCompatActivity
         _txtLog = (TextView) findViewById(R.id.txtLog);
         //_scroller = (ScrollView) findViewById(R.id.scroller);
 
-        //_sdk.setHost("http://192.168.201.12:12000");
+        _sdk.setHost("http://192.168.201.12:12000");
         setSDKCallback();
         //_sdk.init(MainActivity.this,GameKey,AppSecret);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.api_methods, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -99,15 +96,15 @@ public class MainActivity extends AppCompatActivity
                     _sdk.parentalLock();
                 }
 
-                else if(_cmd.contains("Verify Token"))
+                else if(_cmd.contains("Login By Token"))
                 {
-                    _sdk.verifyToken(_sdk.getToken());
+                    _sdk.loginByToken(_sdk.getToken());
                 }
                 else if(_cmd.contains("Verify Session"))
                 {
                     _sdk.verifySession(GameKey,  _sdk.getSessionId(), _sdk.getOpenId(), "signature");
                 }
-                else if(_cmd.contains("OpenId"))
+                else if(_cmd.contains("OpenID"))
                 {
                     _sdk.openId();
                 }
@@ -126,11 +123,11 @@ public class MainActivity extends AppCompatActivity
 
                 else if(_cmd.contains("Google Pay"))
                 {
-                    _sdk.pay(initPayReq("com.sgstudios.paytest1", "managed"), null);
+                    _sdk.pay(initPayReq("com.sgstudios.paytest1", "managed"));
                 }
                 else if(_cmd.contains("Google Subscribe"))
                 {
-                    _sdk.pay(initPayReq("com.sgstudions.subscribetest1","subscribe"), null);
+                    _sdk.pay(initPayReq("com.sgstudions.subscribetest1","subscribe"));
                 }
                 else if(_cmd.contains("Google Restore"))
                 {
@@ -140,8 +137,8 @@ public class MainActivity extends AppCompatActivity
                 else if(_cmd.contains("WeChat Pay"))
                 {
                     String order = "wx_"+ UUID.randomUUID().toString();
-                    SgSDKPayRequest req = initWeChatOrder(order.substring(0,10), "wx_diamond", 10);
-                    _sdk.pay(req, MainActivity.this);
+                    SGPayRequest req = initWeChatOrder(order.substring(0,10), "元宝", 10);
+                    _sdk.pay(req);
                 }
 
                 else if(_cmd.contains("Widget"))
@@ -210,15 +207,15 @@ public class MainActivity extends AppCompatActivity
     {
         UILog("Prepare SDK Listener...");
 
-        _sdk.setListener(new SgSDKListener()
+        _sdk.setListener(new SGListener()
         {
             @Override
-            public void onCallBack(SgSDKResult result)
+            public void onCallBack(SGListenerResult result)
             {
                 UILog(result.toString());
-                if(result.getData()!=null) UILog("   -- Result Data: " + result.getData().toString());
+                if(result.Data!=null) UILog("   -- Result Data: " + result.Data.toString());
 
-                switch (result.getCode())
+                switch (result.Code)
                 {
                     case 101: // init OK
                         UILog("getChannelId(): "+_sdk.getChannelId());
@@ -235,10 +232,10 @@ public class MainActivity extends AppCompatActivity
                         break;
 
                     case 1101: // pay OK
-                        SgSDKPayResponse resp = (SgSDKPayResponse)result.getData();
+                        SGPayResponse resp = (SGPayResponse)result.Data;
                         if(resp!=null)
                         {
-                            UILog("SgSDKPayResponse: "+resp.rawJson);
+                            UILog("SGPayResponse: "+resp.rawJson);
                         }
                         break;
 
@@ -249,12 +246,12 @@ public class MainActivity extends AppCompatActivity
                     case 1106: // pay fail
                     case 1107: // pay fail
                     case 1108: // pay fail
-                        SgSDKPayResponse resp2 = (SgSDKPayResponse)result.getData();
-                        if(resp2!=null) { UILog("SgSDKPayResponse: "+resp2.rawJson); }
+                        SGPayResponse resp2 = (SGPayResponse)result.Data;
+                        if(resp2!=null) { UILog("SGPayResponse: "+resp2.rawJson); }
                         break;
                     case 1120: // wechat pay result
-                        SgSDKPayResponse resp3 = (SgSDKPayResponse)result.getData();
-                        if(resp3!=null) { UILog("SgSDKPayResponse: "+resp3.receipt); }
+                        SGPayResponse resp3 = (SGPayResponse)result.Data;
+                        if(resp3!=null) { UILog("SGPayResponse: "+resp3.receipt); }
                         break;
                     case 1151: // google pay init fail
                     case 1161: // google subscribe ok
@@ -272,9 +269,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private SgSDKPayRequest initPayReq(String pid, String type)
+    private SGPayRequest initPayReq(String pid, String type)
     {
-        SgSDKPayRequest req = new SgSDKPayRequest();
+        SGPayRequest req = new SGPayRequest();
         req.productId = pid;
         req.productName = "My Product";
         req.paymentMethod = type; //"managed" or "subscribe"
@@ -285,9 +282,9 @@ public class MainActivity extends AppCompatActivity
         return req;
     }
 
-    private SgSDKPayRequest initWeChatOrder(String orderID, String pName, float price)
+    private SGPayRequest initWeChatOrder(String orderID, String pName, float price)
     {
-        SgSDKPayRequest req = new SgSDKPayRequest();
+        SGPayRequest req = new SGPayRequest();
         req.orderId = orderID;
         req.productName = pName;
         req.price = price;

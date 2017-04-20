@@ -34,8 +34,7 @@ public class MainActivity extends AppCompatActivity
 
         _txtLog = (TextView) findViewById(R.id.txtLog);
         //_scroller = (ScrollView) findViewById(R.id.scroller);
-
-        _sdk.setHost("http://192.168.201.12:12000");
+        //_sdk.setHost("http://192.168.201.12:12000");
         setSDKCallback();
         //_sdk.init(MainActivity.this,GameKey,AppSecret);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);

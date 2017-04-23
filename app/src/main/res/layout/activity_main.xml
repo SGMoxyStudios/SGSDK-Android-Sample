@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sgstudios.test.MainActivity">
+    tools:context="com.example.sgsdktest.MainActivity">
 
 
     <LinearLayout
@@ -23,22 +23,18 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp">
 
-        <GridLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:columnCount="3"
-            android:rowCount="1">
+            android:layout_marginBottom="8dp">
 
             <Spinner
                 android:id="@+id/spinner"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_alignParentLeft="false"
-                android:layout_column="0"
-                android:layout_columnWeight="-1"
+                android:layout_marginRight="55dp"
                 android:background="@android:color/background_light"
-                android:spinnerMode="dialog"/>
+                />
 
             <Button
                 android:id="@+id/btnGo"
@@ -49,7 +45,7 @@
                 android:background="@color/colorAccent"
                 android:text="Run"
                 android:textColor="@android:color/background_light"/>
-        </GridLayout>
+        </RelativeLayout>
 
 
         <RelativeLayout

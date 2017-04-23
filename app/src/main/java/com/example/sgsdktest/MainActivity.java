@@ -20,9 +20,7 @@ public class MainActivity extends AppCompatActivity
     private final String AppSecret = "d7d7c810-d7ee-11e6-9e86-db4f79aeee86";
 
     private TextView _txtLog;
-
-    private String _cmd;
-    private boolean isWidgetShown=false;
+    private String _cmd="";
 
     private SGSDK _sdk = SGSDK.getInstance();
 
@@ -33,13 +31,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         _txtLog = (TextView) findViewById(R.id.txtLog);
-        //_scroller = (ScrollView) findViewById(R.id.scroller);
+
         //_sdk.setHost("http://192.168.201.12:12000");
         setSDKCallback();
         //_sdk.init(MainActivity.this,GameKey,AppSecret);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.api_methods, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener()
         {
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 _cmd = ""+parent.getItemAtPosition(position);
-                //UILog("Command: "+parent.getItemAtPosition(position) + " selected.  Click RUN.");
+                runCommand();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent)
@@ -59,99 +58,7 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.btnGo).setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View view)
-            {
-                if(_cmd.contains("Init"))
-                {
-                    _sdk.init(MainActivity.this,GameKey,AppSecret);
-                }
-
-                else if(_cmd.contains("Login"))
-                {
-                    _sdk.login();
-                }
-                else if(_cmd.contains("Signup"))
-                {
-                    _sdk.signUp();
-                }
-                else if(_cmd.contains("Forget Password"))
-                {
-                    _sdk.forgetPassword();
-                }
-                else if(_cmd.contains("Change Password"))
-                {
-                    _sdk.changePassword();
-                }
-                else if(_cmd.contains("My Account"))
-                {
-                    _sdk.myAccount();
-                }
-                else if(_cmd.contains("My Kid"))
-                {
-                    _sdk.myKid();
-                }
-                else if(_cmd.contains("Parental Lock"))
-                {
-                    _sdk.parentalLock();
-                }
-
-                else if(_cmd.contains("Login By Token"))
-                {
-                    _sdk.loginByToken(_sdk.getToken());
-                }
-                else if(_cmd.contains("Verify Session"))
-                {
-                    _sdk.verifySession(GameKey,  _sdk.getSessionId(), _sdk.getOpenId(), "signature");
-                }
-                else if(_cmd.contains("OpenID"))
-                {
-                    _sdk.openId();
-                }
-                else if(_cmd.contains("Game Start"))
-                {
-                    _sdk.gameStart();
-                }
-                else if(_cmd.contains("Game Stop"))
-                {
-                    _sdk.gameStop();
-                }
-                else if(_cmd.contains("Logout"))
-                {
-                    _sdk.logout();
-                }
-
-                else if(_cmd.contains("Google Pay"))
-                {
-                    _sdk.pay(initPayReq("com.sgstudios.paytest1", "managed"));
-                }
-                else if(_cmd.contains("Google Subscribe"))
-                {
-                    _sdk.pay(initPayReq("com.sgstudions.subscribetest1","subscribe"));
-                }
-                else if(_cmd.contains("Google Restore"))
-                {
-                    _sdk.restorePurchasedItems();
-                }
-
-                else if(_cmd.contains("WeChat Pay"))
-                {
-                    String order = "wx_"+ UUID.randomUUID().toString();
-                    SGPayRequest req = initWeChatOrder(order.substring(0,10), "元宝", 10);
-                    _sdk.pay(req);
-                }
-
-                else if(_cmd.contains("Widget"))
-                {
-                    if(_sdk.isWidgetVisible())
-                    {
-                        _sdk.hideWidget();
-                    }
-                    else
-                    {
-                        _sdk.showWidget("ML");
-                    }
-                }
-            }
+            public void onClick(View view){ runCommand(); }
         });
 
 
@@ -165,7 +72,102 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    private void runCommand()
+    {
+        if(_cmd.contains("[API] Init"))
+        {
+            _sdk.init(MainActivity.this,GameKey,AppSecret);
+        }
+        else if(_cmd.contains("[WebView] Login"))
+        {
+            _sdk.login();
+        }
+        else if(_cmd.contains("[WebView] Signup"))
+        {
+            _sdk.signUp();
+        }
+        else if(_cmd.contains("[WebView] Forget Password"))
+        {
+            _sdk.forgetPassword();
+        }
+        else if(_cmd.contains("[WebView] Change Password"))
+        {
+            _sdk.changePassword();
+        }
+        else if(_cmd.contains("[WebView] My Account"))
+        {
+            _sdk.myAccount();
+        }
+        else if(_cmd.contains("[WebView] My Kid"))
+        {
+            _sdk.myKid();
+        }
+        else if(_cmd.contains("[WebView] Select Kid"))
+        {
+            _sdk.selectKid();
+        }
+        else if(_cmd.contains("[WebView] Parental Lock"))
+        {
+            _sdk.parentalLock();
+        }
 
+        else if(_cmd.contains("Login By Token"))
+        {
+            _sdk.loginByToken(_sdk.getToken());
+        }
+        else if(_cmd.contains("Verify Session"))
+        {
+            _sdk.verifySession(GameKey,  _sdk.getSessionID(), _sdk.getOpenID(), "SIGN");
+        }
+        else if(_cmd.contains("OpenID"))
+        {
+            _sdk.openId();
+        }
+        else if(_cmd.contains("Game Start"))
+        {
+            _sdk.gameStart();
+        }
+        else if(_cmd.contains("Game Stop"))
+        {
+            _sdk.gameStop();
+        }
+        else if(_cmd.contains("Logout"))
+        {
+            _sdk.logout();
+        }
+
+        else if(_cmd.contains("Google Pay"))
+        {
+            _sdk.pay(initPayReq("com.sgstudios.paytest1", "managed"));
+        }
+        else if(_cmd.contains("Google Subscribe"))
+        {
+            _sdk.pay(initPayReq("com.sgstudions.subscribetest1","subscribe"));
+        }
+        else if(_cmd.contains("Google Restore"))
+        {
+            _sdk.restorePurchasedItems();
+        }
+
+        else if(_cmd.contains("WeChat Pay"))
+        {
+            String order = "wx_"+ UUID.randomUUID().toString();
+            SGPayRequest req = initWeChatOrder(order.substring(0,10), "元宝", 10);
+            _sdk.pay(req);
+        }
+        else if(_cmd.contains("Get Order"))
+        {
+            _sdk.getOrder("ID", GameKey, _sdk.getOpenID(), "SIGN");
+        }
+        else if(_cmd.contains("[Widget] Show"))
+        {
+            _sdk.showWidget("ML");
+        }
+        else if(_cmd.contains("[Widget] Hide"))
+        {
+            _sdk.hideWidget();
+        }
+    }
 
     @Override
     protected void onResume()
@@ -217,12 +219,12 @@ public class MainActivity extends AppCompatActivity
                 switch (result.Code)
                 {
                     case 101: // init OK
-                        UILog("getChannelId(): "+_sdk.getChannelId());
+                        UILog("getChannelId(): "+_sdk.getChannelID());
                         break;
 
                     case 201: // login OK
-                        UILog("getOpenId(): "+_sdk.getOpenId());
-                        UILog("getSessionId(): "+_sdk.getSessionId());
+                        UILog("getOpenId(): "+_sdk.getOpenID());
+                        UILog("getSessionId(): "+_sdk.getSessionID());
                         UILog("getToken(): "+_sdk.getToken());
                         UILog("isLogin(): "+_sdk.isLogin());
                         break;
@@ -259,8 +261,10 @@ public class MainActivity extends AppCompatActivity
                     case 1172: // google pay fail
                     case 1182: // google consume fail
 
-                    case 9997: //SDK GetMetaData Error
-                    case 9998: //SDK JSONException
+                    case 9900: //SDK GetMetaData Error
+                    case 9910: //SDK WebAPI Call Error
+                    case 9920: //SDK WebAPI Response Data Error
+
                 }
             }
         });

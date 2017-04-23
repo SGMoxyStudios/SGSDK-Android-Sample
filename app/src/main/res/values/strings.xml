@@ -2,6 +2,7 @@
     <string name="app_name">AndroidSdk</string>
 
     <string-array name="api_methods">
+        <item>**** Select a command ****</item>
         <item>[API] Init</item>
         <item>**************************</item>
         <item>[WebView] Login</item>
@@ -10,9 +11,10 @@
         <item>[WebView] Change Password</item>
         <item>[WebView] My Account</item>
         <item>[WebView] My Kid</item>
+        <item>[WebView] Select Kid</item>
         <item>[WebView] Parental Lock</item>
         <item>**************************</item>
-        <item>[API] Verify Token</item>
+        <item>[API] Login By Token</item>
         <item>[API] Verify Session</item>
         <item>[API] OpenID</item>
         <item>[API] Game Start</item>
@@ -22,10 +24,12 @@
         <item>[API] Google Pay</item>
         <item>[API] Google Subscribe</item>
         <item>[API] Google Restore Purchased</item>
+        <item>[API] Get Order</item>
         <item>**************************</item>
         <item>[API] WeChat Pay</item>
         <item>**************************</item>
-        <item>[Widget] Show/Hide</item>
+        <item>[Widget] Show Widget</item>
+        <item>[Widget] Hide Widget</item>
 
     </string-array>
 

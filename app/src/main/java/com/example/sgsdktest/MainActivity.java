@@ -144,9 +144,9 @@ public class MainActivity extends AppCompatActivity
         {
             _sdk.pay(initPayReq("com.sgstudions.subscribetest1","subscribe"));
         }
-        else if(_cmd.contains("Google Restore"))
+        else if(_cmd.contains("Google ConsumePurchasedItems"))
         {
-            _sdk.restorePurchasedItems();
+            _sdk.consumePurchasedItems();
         }
 
         else if(_cmd.contains("WeChat Pay"))
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(_cmd.contains("[Widget] Show"))
         {
-            _sdk.showWidget("ML");
+            _sdk.showWidget(SGSDK.EWidgetLocation.Left);
         }
         else if(_cmd.contains("[Widget] Hide"))
         {

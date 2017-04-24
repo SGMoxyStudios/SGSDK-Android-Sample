@@ -23,7 +23,7 @@
         <item>**************************</item>
         <item>[API] Google Pay</item>
         <item>[API] Google Subscribe</item>
-        <item>[API] Google Restore Purchased</item>
+        <item>[API] Google ConsumePurchasedItems</item>
         <item>[API] Get Order</item>
         <item>**************************</item>
         <item>[API] WeChat Pay</item>

@@ -9,6 +9,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.sgstudios.sdk.*;
 
 import java.util.UUID;
@@ -214,7 +215,7 @@ public class MainActivity extends AppCompatActivity
             public void onCallBack(SGListenerResult result)
             {
                 UILog(result.toString());
-                if(result.Data!=null) UILog("   -- Result Data: " + result.Data.toString());
+                if(result.Data!=null) UILog("-->Result Data: " + result.Data.toString());
 
                 switch (result.Code)
                 {
@@ -252,7 +253,7 @@ public class MainActivity extends AppCompatActivity
                         break;
                     case 1120: // wechat pay result
                         SGPayResponse resp3 = (SGPayResponse)result.Data;
-                        if(resp3!=null) { UILog("SGPayResponse: "+resp3.receipt); }
+                        if(resp3!=null) { UILog("SGPayResponse: "+resp3.Receipt); }
                         break;
                     case 1151: // google pay init fail
                     case 1161: // google subscribe ok
@@ -275,12 +276,12 @@ public class MainActivity extends AppCompatActivity
     private SGPayRequest initPayReq(String pid, String type)
     {
         SGPayRequest req = new SGPayRequest();
-        req.productId = pid;
-        req.productName = "My Product";
-        req.paymentMethod = type; //"managed" or "subscribe"
-        req.paymentChannel = "GooglePay"; //GooglePay, WeChat,.........
-        req.productDesc = "Product Description......";
-        req.price = 1.25f;
+        req.ProductID = pid;
+        req.ProductName = "My Product";
+        req.PaymentMethod = type; //"managed" or "subscribe"
+        req.PaymentChannel = "GooglePay"; //GooglePay, WeChat,.........
+        req.ProductDesc = "Product Description......";
+        req.Price = 1.25f;
 
         return req;
     }
@@ -288,17 +289,15 @@ public class MainActivity extends AppCompatActivity
     private SGPayRequest initWeChatOrder(String orderID, String pName, float price)
     {
         SGPayRequest req = new SGPayRequest();
-        req.orderId = orderID;
-        req.productName = pName;
-        req.price = price;
-
-        req.productId = "wx_diamond";
-        req.paymentChannel = "WeChat";
+        req.OrderID = orderID;
+        req.ProductName = pName;
+        req.Price = price;
+        req.ProductID = "wx_diamond";
+        req.PaymentChannel = "WeChat";
+        req.ProductDesc = "Product Description......";
+        req.U8NotifyUrl = "http://www.sgstudios.cn:8080/pay/sg/payCallback/1706";
         req.trade_type = "APP";
-        req.productDesc = "Product Description......";
         req.spbill_create_ip = "14.23.150.211";
-        req.notify_url = "http://gameapi.smartgamesltd.com/wechat-pay";
-        req.u8NotifyUrl = "http://www.sgstudios.cn:8080/pay/sg/payCallback/1706";
         String random_str = UUID.randomUUID().toString().replace("-", "");
         req.nonce_str = random_str.substring(0,10); //random number
 

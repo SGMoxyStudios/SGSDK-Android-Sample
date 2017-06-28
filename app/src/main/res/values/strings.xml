@@ -19,6 +19,7 @@
         <item>[API] OpenID</item>
         <item>[API] Game Start</item>
         <item>[API] Game Stop</item>
+        <item>[API] IsLogin</item>
         <item>[API] Logout</item>
         <item>**************************</item>
         <item>[API] Google Pay</item>

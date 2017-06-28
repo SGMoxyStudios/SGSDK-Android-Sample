@@ -132,6 +132,11 @@ public class MainActivity extends AppCompatActivity
         {
             _sdk.gameStop();
         }
+
+        else if(_cmd.contains("IsLogin"))
+        {
+            UILog(_sdk.isLogin() ? "True" : "False");
+        }
         else if(_cmd.contains("Logout"))
         {
             _sdk.logout();
